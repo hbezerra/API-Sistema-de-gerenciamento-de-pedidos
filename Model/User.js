@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt"); // Importando a biblioteca "Bcrypt";
 let userSchema = new mongoose.Schema({ // Criando o Schema de usuário ; 
     name: {type: String, required: true, lowercase: true}, // Criando o campo "nome" ;
     email: {type: String, required: true, unique: true, lowercase: true}, // Criando o campo "email" ; 
-    password: {type: String, required: true, lowercase: true}, // Criando o campo "senha" ; 
+    password: {type: String, required: true}, // Criando o campo "senha" ; 
     created_at: {type: Date, default: Date.now} // Criando o campo "Criado" ; 
 }); 
 

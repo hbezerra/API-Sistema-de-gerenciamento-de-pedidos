@@ -47,6 +47,7 @@ const adicionarPedido = async (req, res) => { // Função responsável por adici
         if(novoPedido) { // Caso o pedido tenha sido adicionado no banco de dados ; 
             await Vendedor.findByIdAndUpdate(vendedor, {$push: {pedidos: novoPedido._id}}, {new: true}) // Vinculando o pedido adicionado ao vendedor ; 
             await Categoria.findByIdAndUpdate(categoria, {$push: {pedidos: novoPedido._id}}, {new: true}) // Vinculando o pedido adicionado a categoria ;
+            await Cliente.findByIdAndUpdate(cliente, {$push: {pedidos: novoPedido._id}}, {new: true}) // Vinculando o pedido adicionado ao cliente ; 
             return res.status(201).json({message: `O pedido: ${novoPedido.pedido} foi adicionado com sucesso!`}); // Retornando a mensagem de sucesso ; 
         }
         else { // Caso o pedido não tenha sido adicionado no banco de dados ; 
@@ -72,6 +73,7 @@ const deletarPedido = async (req, res) => { // Função responsável por deletar
         if(pedidoRemovido) { // Caso o pedido seja removido com sucesso! ; 
             await Vendedor.findByIdAndUpdate(pedidoRemovido.vendedor, {$pull: {pedidos:id}}, {new: true}) // Excluindo o ID do pedido do array de vendedores vinculados ; 
             await Cliente.findByIdAndUpdate(pedidoRemovido.cliente, {$pull: {pedidos:id}}, {new: true}) // Excluindo o ID do pedido do array de clientes vinculados ;
+            await Categoria.findByIdAndUpdate(pedidoRemovido.categoria, {$pull: {pedidos: id}}, {new: true}) // Excluindo o ID do pedido do arrau de categoria vinculados
             return res.status(200).json({messagem: "O pedido foi excluído com sucesso!"}); // Retornando a mensagem de sucesso ; 
         }
         else { // Caso o pedido não tenha sido removido ; 

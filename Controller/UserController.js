@@ -7,7 +7,7 @@ const secret = process.env.JWT_SECRET;
 
 const register = async (req, res) => { // Função responsável por registrar um usuário no banco de dados ; 
     try {
-        const {name, email, password} = req.body; // Recuperando os valores e atribuindo as variáveis ; 
+        let {name, email, password} = req.body; // Recuperando os valores e atribuindo as variáveis ; 
 
         if(!name || !email || !password) { // Caso os dados informados pelo usuário sejam inválidos ; 
             return res.status(400).json({message: "Erro ao adicionar usuário no banco de dados! Verifique os campos e tente novamente"}); // Atribuindo a mensagem de erro ; 
@@ -34,7 +34,7 @@ const register = async (req, res) => { // Função responsável por registrar um
 
 const login = async (req, res) => { // Função responsável pelo login do usuário ; 
     try {
-        const {email, password} = req.body; // Recuperando o email e senha do usuário e atribuindo as variáveis ; 
+        let {email, password} = req.body; // Recuperando o email e senha do usuário e atribuindo as variáveis ; 
         
         email = email.trim().toLowerCase(); // Remove espaços extras e converte para mínusculas ; 
 
