@@ -76,11 +76,12 @@ const atualizarCliente = async (req, res) => { // Função responsável por atua
 
         email = email.trim().toLowerCase(); // Eliminando espaços em brancos e trasformando tudo em minúsculas ; 
 
-        const clienteExistente = await Cliente.findOne({email}); // Verificando se existe um cliente cadastrado com o e-mail informado ; 
-        if(clienteExistente) {
-            return res.status(400).json({message: "Erro ao adicionar cliente no banco de dados! O e-mail informado já existe!"}); // Atribuindo a mensagem de erro ; 
-        }
+        const idValido = await Cliente.findById(id); // Verificando se existe no banco de dados um cliente com o ID informado ; 
+        if(!idValido) {return res.status(400).json({message: "Erro ao atualizar cliente! O ID informado é inválido!"})}; // Atribuindo a mensagem de erro ; 
 
+        const clienteExistente = await Cliente.findOne({email}); // Selecionando no banco de dados um cliente com o nome informado pelo usuário ; 
+        if(clienteExistente && clienteExistente._id.toString !== id) {return res.status(404).json({message: "Erro ao atualizar cliente! Já existe um cliente com o e-mail informado"})}; // Atribuindo a mensagem de erro ; 
+        
         let clienteAtualizado = await Cliente.findByIdAndUpdate(id, {nome, email}); 
         let retornoUser = clienteAtualizado ? res.status(200).json({message: `O cliente de ID: ${clienteAtualizado.id} foi atualizado com sucesso!`}) : res.status(404).json({message: `Erro ao atualizar cliente! Não foi possível encontrar nenhum cliente com o ID informado!`}); // Atribuindo a mensagem de sucesso ou de erro baseado na condição ; 
         return retornoUser;

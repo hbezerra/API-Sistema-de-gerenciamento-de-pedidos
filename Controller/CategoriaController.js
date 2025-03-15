@@ -81,11 +81,11 @@ const atualizarCategoria = async (req, res) => { // Função responsável por at
         
     name = name.trim().toLowerCase(); // Eliminando espaços em brancos e trasformando tudo em minúsculas ; 
 
-    const categoriaExistente = await Categoria.findOne({name}); // Selecionando no banco de dados, uma categoria que estaja com o mesmo nome que a categoria informada pelo usuário ; 
-       
-    if(categoriaExistente) { // Caso já exista uma categoria com o nome informado ; 
-        return res.status(409).json({message: "Erro ao adicionar categoria! Já existe uma categoria com o nome informado!"}); // Atribuindo a mensagem de erro ; 
-    }
+    const idValido = await Categoria.findById(id); // Verificando se existe no banco de dados uma categoria com o ID informado ; 
+    if(!idValido) {return res.status(404).json({message: "Erro ao atualizar categoria! O ID é inválido!"})}; // Atribuindo a mensagem de erro ; 
+
+    const categoriaExistente = await Categoria.findOne({name}); // Selecionando uma categoria com o nome informado ; 
+    if(categoriaExistente && categoriaExistente._id.toString() !== id) {return res.status(400).json({message: "Erro ao atualizar categoria! Já existe uma categoria com o nome informado!"})}; // Retornando a mensagem de erro ; 
 
     let categoriaAtualizada = await Categoria.findByIdAndUpdate(id, {name, slug: slugify(name)}); // Fazendo o update da categoria no banco de dados ; 
     const retornoUser = categoriaAtualizada ? res.status(200).json({message: `A categoria de ID: ${categoriaAtualizada.id} foi atualizada com sucesso!`}) : res.status(404).json({message: "Erro ao atualizar categoria"}); // Atribuindo a mensagem de sucesso ou de erro baseada na condição ; 

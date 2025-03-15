@@ -75,11 +75,12 @@ const atualizarVendedor = async (req, res) => { // Função responsável por atu
 
     name = name.trim().toLowerCase(); // Eliminando espaços em brancos e trasformando tudo em minúsculas ; 
     
-    const vendedorExistente = await Vendedor.findOne({name}); // Selecionando no banco de dados um vendedor onde o nome seja igual ao nome informado pelo usuário para verificação; 
-       
-    if(vendedorExistente) { // Caso já exista um vendedor com nome informado; 
-        return res.status(409).json({message: `Erro ao adicionar vendedor! Já existe um vendedor com o nome informado!`}); // Atribuindo a mensagem de erro;
-    }
+    const idValido = await Vendedor.findById(id); // Verificando se o ID informado é válido ;
+    if(!idValido) { return res.status(404).json({message: "Erro ao atualizar vendedor! O ID informado não é válido"})}; // Atribuindo a mensagem de erro ; 
+
+    const vendedorExistente = await Vendedor.findOne({name}); // Verificando se já existe um vendedor com o nome informado ;
+    if(vendedorExistente && vendedorExistente.id != id) {return res.status(400).json({message: `Erro ao atualizar vendedor! Já existe um vendedor com o nome informado!`})}; // Atribuindo a mensagem de erro ; 
+    
 
     let vendedorAtualizado = await Vendedor.findByIdAndUpdate({id}, {name}); // Atualizando o vendedor no banco de dados ; 
     const retornoUser = vendedorAtualizado ? res.status(200).json({message: `O vendedor de ID: ${vendedorAtualizado.id} foi atualizado com sucesso!`}) : res.status(400).json({message: "Erro ao atualizar vendedor"}); // Atribuindo a mensagem de sucesso ou de erro baseada na condição ; 
